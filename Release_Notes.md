@@ -30,7 +30,7 @@ This directory contains the ILPS28QSW component drivers.
 # Update history
 
 ::: {.collapse}
-<input type="checkbox" id="collapse-section1" checked aria-hidden="true">
+<input type="checkbox" id="collapse-section1" aria-hidden="true">
 <label for="collapse-section1" aria-hidden="true">V1.0.0 / 06-March-2023</label>
 <div>			
 
@@ -39,6 +39,18 @@ This directory contains the ILPS28QSW component drivers.
 ### First release
 
 - First official release [ref. DS v1.0]
+
+##
+
+</div>
+
+<input type="checkbox" id="collapse-section2" checked aria-hidden="true">
+<label for="collapse-section2" aria-hidden="true">V1.0.1 / 26-July-2023</label>
+<div>			
+
+## Main changes
+
+- ah_qvar: Add API to convert from LSB to mV
 
 ##
 
