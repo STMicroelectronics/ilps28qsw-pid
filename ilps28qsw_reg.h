@@ -486,13 +486,15 @@ typedef struct
 } ilps28qsw_id_t;
 int32_t ilps28qsw_id_get(stmdev_ctx_t *ctx, ilps28qsw_id_t *val);
 
+typedef enum
+{
+  ILPS28QSW_AUTO      = 0x00, /* anti-spike filters managed by protocol */
+  ILPS28QSW_ALWAYS_ON = 0x01, /* anti-spike filters always on */
+} ilps28qsw_filter_t;
+
 typedef struct
 {
-  enum
-  {
-    ILPS28QSW_AUTO      = 0x00, /* anti-spike filters managed by protocol */
-    ILPS28QSW_ALWAYS_ON = 0x01, /* anti-spike filters always on */
-  } filter;
+  ilps28qsw_filter_t filter;
 } ilps28qsw_bus_mode_t;
 int32_t ilps28qsw_bus_mode_set(stmdev_ctx_t *ctx, ilps28qsw_bus_mode_t *val);
 int32_t ilps28qsw_bus_mode_get(stmdev_ctx_t *ctx, ilps28qsw_bus_mode_t *val);
@@ -540,42 +542,50 @@ typedef struct
 int32_t ilps28qsw_all_sources_get(stmdev_ctx_t *ctx,
                                   ilps28qsw_all_sources_t *val);
 
+typedef enum
+{
+  ILPS28QSW_1260hPa = 0x00,
+  ILPS28QSW_4060hPa = 0x01,
+} ilps28qsw_fs_t;
+
+typedef enum
+{
+  ILPS28QSW_ONE_SHOT = 0x00, /* Device in power down till software trigger */
+  ILPS28QSW_1Hz      = 0x01,
+  ILPS28QSW_4Hz      = 0x02,
+  ILPS28QSW_10Hz     = 0x03,
+  ILPS28QSW_25Hz     = 0x04,
+  ILPS28QSW_50Hz     = 0x05,
+  ILPS28QSW_75Hz     = 0x06,
+  ILPS28QSW_100Hz    = 0x07,
+  ILPS28QSW_200Hz    = 0x08,
+} ilps28qsw_odr_t;
+
+typedef enum
+{
+  ILPS28QSW_4_AVG   = 0,
+  ILPS28QSW_8_AVG   = 1,
+  ILPS28QSW_16_AVG  = 2,
+  ILPS28QSW_32_AVG  = 3,
+  ILPS28QSW_64_AVG  = 4,
+  ILPS28QSW_128_AVG = 5,
+  ILPS28QSW_256_AVG = 6,
+  ILPS28QSW_512_AVG = 7,
+} ilps28qsw_avg_t;
+
+typedef enum
+{
+  ILPS28QSW_LPF_DISABLE   = 0,
+  ILPS28QSW_LPF_ODR_DIV_4 = 1,
+  ILPS28QSW_LPF_ODR_DIV_9 = 3,
+} ilps28qsw_lpf_t;
+
 typedef struct
 {
-  enum
-  {
-    ILPS28QSW_1260hPa = 0x00,
-    ILPS28QSW_4060hPa = 0x01,
-  } fs;
-  enum
-  {
-    ILPS28QSW_ONE_SHOT = 0x00, /* Device in power down till software trigger */
-    ILPS28QSW_1Hz      = 0x01,
-    ILPS28QSW_4Hz      = 0x02,
-    ILPS28QSW_10Hz     = 0x03,
-    ILPS28QSW_25Hz     = 0x04,
-    ILPS28QSW_50Hz     = 0x05,
-    ILPS28QSW_75Hz     = 0x06,
-    ILPS28QSW_100Hz    = 0x07,
-    ILPS28QSW_200Hz    = 0x08,
-  } odr;
-  enum
-  {
-    ILPS28QSW_4_AVG   = 0,
-    ILPS28QSW_8_AVG   = 1,
-    ILPS28QSW_16_AVG  = 2,
-    ILPS28QSW_32_AVG  = 3,
-    ILPS28QSW_64_AVG  = 4,
-    ILPS28QSW_128_AVG = 5,
-    ILPS28QSW_256_AVG = 6,
-    ILPS28QSW_512_AVG = 7,
-  } avg;
-  enum
-  {
-    ILPS28QSW_LPF_DISABLE   = 0,
-    ILPS28QSW_LPF_ODR_DIV_4 = 1,
-    ILPS28QSW_LPF_ODR_DIV_9 = 3,
-  } lpf;
+  ilps28qsw_fs_t fs;
+  ilps28qsw_odr_t odr;
+  ilps28qsw_avg_t avg;
+  ilps28qsw_lpf_t lpf;
   uint8_t interleaved_mode;
 } ilps28qsw_md_t;
 int32_t ilps28qsw_mode_set(stmdev_ctx_t *ctx, ilps28qsw_md_t *val);
@@ -611,17 +621,19 @@ typedef struct
 int32_t ilps28qsw_ah_qvar_data_get(stmdev_ctx_t *ctx,
                                    ilps28qsw_ah_qvar_data_t *data);
 
+typedef enum
+{
+  ILPS28QSW_BYPASS           = 0,
+  ILPS28QSW_FIFO             = 1,
+  ILPS28QSW_STREAM           = 2,
+  ILPS28QSW_STREAM_TO_FIFO   = 7, /* Dynamic-Stream, FIFO on Trigger */
+  ILPS28QSW_BYPASS_TO_STREAM = 6, /* Bypass, Dynamic-Stream on Trigger */
+  ILPS28QSW_BYPASS_TO_FIFO   = 5, /* Bypass, FIFO on Trigger */
+} ilps28qsw_operation_t;
+
 typedef struct
 {
-  enum
-  {
-    ILPS28QSW_BYPASS           = 0,
-    ILPS28QSW_FIFO             = 1,
-    ILPS28QSW_STREAM           = 2,
-    ILPS28QSW_STREAM_TO_FIFO   = 7, /* Dynamic-Stream, FIFO on Trigger */
-    ILPS28QSW_BYPASS_TO_STREAM = 6, /* Bypass, Dynamic-Stream on Trigger */
-    ILPS28QSW_BYPASS_TO_FIFO   = 5, /* Bypass, FIFO on Trigger */
-  } operation;
+  ilps28qsw_operation_t operation;
   uint8_t watermark : 7; /* (0 disable) max 128.*/
 } ilps28qsw_fifo_md_t;
 int32_t ilps28qsw_fifo_mode_set(stmdev_ctx_t *ctx, ilps28qsw_fifo_md_t *val);
@@ -664,14 +676,16 @@ int32_t ilps28qsw_int_on_threshold_mode_set(stmdev_ctx_t *ctx,
 int32_t ilps28qsw_int_on_threshold_mode_get(stmdev_ctx_t *ctx,
                                             ilps28qsw_int_th_md_t *val);
 
+typedef enum
+{
+  ILPS28QSW_OUT_AND_INTERRUPT = 0,
+  ILPS28QSW_ONLY_INTERRUPT    = 1,
+  ILPS28QSW_RST_REFS          = 2,
+} ilps28qsw_apply_ref_t;
+
 typedef struct
 {
-  enum
-  {
-    ILPS28QSW_OUT_AND_INTERRUPT = 0,
-    ILPS28QSW_ONLY_INTERRUPT    = 1,
-    ILPS28QSW_RST_REFS          = 2,
-  } apply_ref;
+  ilps28qsw_apply_ref_t apply_ref;
   uint8_t get_ref : 1; /* Use current pressure value as reference */
 } ilps28qsw_ref_md_t;
 int32_t ilps28qsw_reference_mode_set(stmdev_ctx_t *ctx,
