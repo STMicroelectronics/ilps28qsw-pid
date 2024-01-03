@@ -468,9 +468,9 @@ typedef union
  * them with a custom implementation.
  */
 
-int32_t ilps28qsw_read_reg(stmdev_ctx_t *ctx, uint8_t reg,
+int32_t ilps28qsw_read_reg(const stmdev_ctx_t *ctx, uint8_t reg,
                            uint8_t *data, uint16_t len);
-int32_t ilps28qsw_write_reg(stmdev_ctx_t *ctx, uint8_t reg,
+int32_t ilps28qsw_write_reg(const stmdev_ctx_t *ctx, uint8_t reg,
                             uint8_t *data, uint16_t len);
 
 extern float_t ilps28qsw_from_fs1260_to_hPa(int32_t lsb);
@@ -484,7 +484,7 @@ typedef struct
 {
   uint8_t whoami;
 } ilps28qsw_id_t;
-int32_t ilps28qsw_id_get(stmdev_ctx_t *ctx, ilps28qsw_id_t *val);
+int32_t ilps28qsw_id_get(const stmdev_ctx_t *ctx, ilps28qsw_id_t *val);
 
 typedef enum
 {
@@ -496,8 +496,8 @@ typedef struct
 {
   ilps28qsw_filter_t filter;
 } ilps28qsw_bus_mode_t;
-int32_t ilps28qsw_bus_mode_set(stmdev_ctx_t *ctx, ilps28qsw_bus_mode_t *val);
-int32_t ilps28qsw_bus_mode_get(stmdev_ctx_t *ctx, ilps28qsw_bus_mode_t *val);
+int32_t ilps28qsw_bus_mode_set(const stmdev_ctx_t *ctx, ilps28qsw_bus_mode_t *val);
+int32_t ilps28qsw_bus_mode_get(const stmdev_ctx_t *ctx, ilps28qsw_bus_mode_t *val);
 
 typedef enum
 {
@@ -505,7 +505,7 @@ typedef enum
   ILPS28QSW_BOOT    = 0x01, /* Restore calib. param. ( it takes 10ms ) */
   ILPS28QSW_RESET   = 0x02, /* Reset configuration registers */
 } ilps28qsw_init_t;
-int32_t ilps28qsw_init_set(stmdev_ctx_t *ctx, ilps28qsw_init_t val);
+int32_t ilps28qsw_init_set(const stmdev_ctx_t *ctx, ilps28qsw_init_t val);
 
 typedef struct
 {
@@ -518,15 +518,15 @@ typedef struct
   uint8_t end_meas  : 1; /* Single measurement is finished. */
   uint8_t ref_done  : 1; /* Auto-Zero value is set. */
 } ilps28qsw_stat_t;
-int32_t ilps28qsw_status_get(stmdev_ctx_t *ctx, ilps28qsw_stat_t *val);
+int32_t ilps28qsw_status_get(const stmdev_ctx_t *ctx, ilps28qsw_stat_t *val);
 
 typedef struct
 {
   uint8_t sda_pull_up : 1; /* 1 = pull-up always disabled */
   uint8_t cs_pull_up  : 1; /* 1 = pull-up always disabled */
 } ilps28qsw_pin_conf_t;
-int32_t ilps28qsw_pin_conf_set(stmdev_ctx_t *ctx, ilps28qsw_pin_conf_t *val);
-int32_t ilps28qsw_pin_conf_get(stmdev_ctx_t *ctx, ilps28qsw_pin_conf_t *val);
+int32_t ilps28qsw_pin_conf_set(const stmdev_ctx_t *ctx, ilps28qsw_pin_conf_t *val);
+int32_t ilps28qsw_pin_conf_get(const stmdev_ctx_t *ctx, ilps28qsw_pin_conf_t *val);
 
 typedef struct
 {
@@ -539,7 +539,7 @@ typedef struct
   uint8_t fifo_ovr    :  1; /* FIFO overrun */
   uint8_t fifo_th     :  1; /* FIFO threshold reached */
 } ilps28qsw_all_sources_t;
-int32_t ilps28qsw_all_sources_get(stmdev_ctx_t *ctx,
+int32_t ilps28qsw_all_sources_get(const stmdev_ctx_t *ctx,
                                   ilps28qsw_all_sources_t *val);
 
 typedef enum
@@ -588,10 +588,10 @@ typedef struct
   ilps28qsw_lpf_t lpf;
   uint8_t interleaved_mode;
 } ilps28qsw_md_t;
-int32_t ilps28qsw_mode_set(stmdev_ctx_t *ctx, ilps28qsw_md_t *val);
-int32_t ilps28qsw_mode_get(stmdev_ctx_t *ctx, ilps28qsw_md_t *val);
+int32_t ilps28qsw_mode_set(const stmdev_ctx_t *ctx, ilps28qsw_md_t *val);
+int32_t ilps28qsw_mode_get(const stmdev_ctx_t *ctx, ilps28qsw_md_t *val);
 
-int32_t ilps28qsw_trigger_sw(stmdev_ctx_t *ctx, ilps28qsw_md_t *md);
+int32_t ilps28qsw_trigger_sw(const stmdev_ctx_t *ctx, ilps28qsw_md_t *md);
 
 typedef struct
 {
@@ -610,7 +610,7 @@ typedef struct
     int32_t lsb; /* 24 bit properly right aligned */
   } ah_qvar;
 } ilps28qsw_data_t;
-int32_t ilps28qsw_data_get(stmdev_ctx_t *ctx, ilps28qsw_md_t *md,
+int32_t ilps28qsw_data_get(const stmdev_ctx_t *ctx, ilps28qsw_md_t *md,
                            ilps28qsw_data_t *data);
 typedef struct
 {
@@ -618,7 +618,7 @@ typedef struct
   int32_t lsb; /* 24 bit properly right aligned */
   int32_t raw; /* 32 bit signed-left algned  format left  */
 } ilps28qsw_ah_qvar_data_t;
-int32_t ilps28qsw_ah_qvar_data_get(stmdev_ctx_t *ctx,
+int32_t ilps28qsw_ah_qvar_data_get(const stmdev_ctx_t *ctx,
                                    ilps28qsw_ah_qvar_data_t *data);
 
 typedef enum
@@ -636,10 +636,10 @@ typedef struct
   ilps28qsw_operation_t operation;
   uint8_t watermark : 7; /* (0 disable) max 128.*/
 } ilps28qsw_fifo_md_t;
-int32_t ilps28qsw_fifo_mode_set(stmdev_ctx_t *ctx, ilps28qsw_fifo_md_t *val);
-int32_t ilps28qsw_fifo_mode_get(stmdev_ctx_t *ctx, ilps28qsw_fifo_md_t *val);
+int32_t ilps28qsw_fifo_mode_set(const stmdev_ctx_t *ctx, ilps28qsw_fifo_md_t *val);
+int32_t ilps28qsw_fifo_mode_get(const stmdev_ctx_t *ctx, ilps28qsw_fifo_md_t *val);
 
-int32_t ilps28qsw_fifo_level_get(stmdev_ctx_t *ctx, uint8_t *val);
+int32_t ilps28qsw_fifo_level_get(const stmdev_ctx_t *ctx, uint8_t *val);
 
 typedef struct
 {
@@ -647,21 +647,21 @@ typedef struct
   int32_t lsb; /* 24 bit properly right aligned */
   int32_t raw;
 } ilps28qsw_fifo_data_t;
-int32_t ilps28qsw_fifo_data_get(stmdev_ctx_t *ctx, uint8_t samp,
+int32_t ilps28qsw_fifo_data_get(const stmdev_ctx_t *ctx, uint8_t samp,
                                 ilps28qsw_md_t *md, ilps28qsw_fifo_data_t *data);
 
 typedef struct
 {
   uint8_t int_latched  : 1; /* int events are: int on threshold, FIFO */
 } ilps28qsw_int_mode_t;
-int32_t ilps28qsw_interrupt_mode_set(stmdev_ctx_t *ctx,
+int32_t ilps28qsw_interrupt_mode_set(const stmdev_ctx_t *ctx,
                                      ilps28qsw_int_mode_t *val);
-int32_t ilps28qsw_interrupt_mode_get(stmdev_ctx_t *ctx,
+int32_t ilps28qsw_interrupt_mode_get(const stmdev_ctx_t *ctx,
                                      ilps28qsw_int_mode_t *val);
 
-int32_t ilps28qsw_ah_qvar_disable(stmdev_ctx_t *ctx);
-int32_t ilps28qsw_ah_qvar_en_set(stmdev_ctx_t *ctx, uint8_t val);
-int32_t ilps28qsw_ah_qvar_en_get(stmdev_ctx_t *ctx, uint8_t *val);
+int32_t ilps28qsw_ah_qvar_disable(const stmdev_ctx_t *ctx);
+int32_t ilps28qsw_ah_qvar_en_set(const stmdev_ctx_t *ctx, uint8_t val);
+int32_t ilps28qsw_ah_qvar_en_get(const stmdev_ctx_t *ctx, uint8_t *val);
 
 typedef struct
 {
@@ -671,9 +671,9 @@ typedef struct
   uint8_t over_th  : 1; /* Pressure data over threshold event */
   uint8_t under_th : 1; /* Pressure data under threshold event */
 } ilps28qsw_int_th_md_t;
-int32_t ilps28qsw_int_on_threshold_mode_set(stmdev_ctx_t *ctx,
+int32_t ilps28qsw_int_on_threshold_mode_set(const stmdev_ctx_t *ctx,
                                             ilps28qsw_int_th_md_t *val);
-int32_t ilps28qsw_int_on_threshold_mode_get(stmdev_ctx_t *ctx,
+int32_t ilps28qsw_int_on_threshold_mode_get(const stmdev_ctx_t *ctx,
                                             ilps28qsw_int_th_md_t *val);
 
 typedef enum
@@ -688,13 +688,13 @@ typedef struct
   ilps28qsw_apply_ref_t apply_ref;
   uint8_t get_ref : 1; /* Use current pressure value as reference */
 } ilps28qsw_ref_md_t;
-int32_t ilps28qsw_reference_mode_set(stmdev_ctx_t *ctx,
+int32_t ilps28qsw_reference_mode_set(const stmdev_ctx_t *ctx,
                                      ilps28qsw_ref_md_t *val);
-int32_t ilps28qsw_reference_mode_get(stmdev_ctx_t *ctx,
+int32_t ilps28qsw_reference_mode_get(const stmdev_ctx_t *ctx,
                                      ilps28qsw_ref_md_t *val);
 
-int32_t ilps28qsw_opc_set(stmdev_ctx_t *ctx, int16_t val);
-int32_t ilps28qsw_opc_get(stmdev_ctx_t *ctx, int16_t *val);
+int32_t ilps28qsw_opc_set(const stmdev_ctx_t *ctx, int16_t val);
+int32_t ilps28qsw_opc_get(const stmdev_ctx_t *ctx, int16_t *val);
 
 /**
   *@}
