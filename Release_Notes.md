@@ -68,7 +68,7 @@ This directory contains the ILPS28QSW component drivers.
 
 </div>
 
-<input type="checkbox" id="collapse-section4" checked aria-hidden="true">
+<input type="checkbox" id="collapse-section4" aria-hidden="true">
 <label for="collapse-section4" aria-hidden="true">V2.0.0 / 19-Mar-2024</label>
 <div>			
 
@@ -76,6 +76,19 @@ This directory contains the ILPS28QSW component drivers.
 
 - Fixed code style (Artistic Style Version 3.4.13)
 - Add "const" to ctx arg for all APIs
+
+##
+
+</div>
+
+<input type="checkbox" id="collapse-section5" checked aria-hidden="true">
+<label for="collapse-section5" aria-hidden="true">V2.1.0 / 19-Jun-2024</label>
+<div>			
+
+## Main changes
+
+- Added separate raw_get APIs for press and temp
+- updated README.md file with tag reference and mdelay description
 
 ##
 
