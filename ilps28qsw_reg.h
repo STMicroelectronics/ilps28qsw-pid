@@ -417,6 +417,7 @@ typedef struct
 #define ILPS28QSW_PRESS_OUT_H             0x2AU
 #define ILPS28QSW_TEMP_OUT_L              0x2BU
 #define ILPS28QSW_TEMP_OUT_H              0x2CU
+
 #define ILPS28QSW_FIFO_DATA_OUT_PRESS_XL  0x78U
 #define ILPS28QSW_FIFO_DATA_OUT_PRESS_L   0x79U
 #define ILPS28QSW_FIFO_DATA_OUT_PRESS_H   0x7AU
