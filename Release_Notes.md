@@ -32,7 +32,7 @@ This directory contains the ILPS28QSW component drivers.
 ::: {.collapse}
 <input type="checkbox" id="collapse-section1" aria-hidden="true">
 <label for="collapse-section1" aria-hidden="true">V1.0.0 / 06-March-2023</label>
-<div>			
+<div>
 
 ## Main changes
 
@@ -46,7 +46,7 @@ This directory contains the ILPS28QSW component drivers.
 
 <input type="checkbox" id="collapse-section2" aria-hidden="true">
 <label for="collapse-section2" aria-hidden="true">V1.0.1 / 26-July-2023</label>
-<div>			
+<div>
 
 ## Main changes
 
@@ -58,7 +58,7 @@ This directory contains the ILPS28QSW component drivers.
 
 <input type="checkbox" id="collapse-section3" aria-hidden="true">
 <label for="collapse-section3" aria-hidden="true">V1.1.0 / 09-Nov-2023</label>
-<div>			
+<div>
 
 ## Main changes
 
@@ -70,7 +70,7 @@ This directory contains the ILPS28QSW component drivers.
 
 <input type="checkbox" id="collapse-section4" aria-hidden="true">
 <label for="collapse-section4" aria-hidden="true">V2.0.0 / 19-Mar-2024</label>
-<div>			
+<div>
 
 ## Main changes
 
@@ -81,14 +81,28 @@ This directory contains the ILPS28QSW component drivers.
 
 </div>
 
-<input type="checkbox" id="collapse-section5" checked aria-hidden="true">
+<input type="checkbox" id="collapse-section5" aria-hidden="true">
 <label for="collapse-section5" aria-hidden="true">V2.1.0 / 19-Jun-2024</label>
-<div>			
+<div>
 
 ## Main changes
 
 - Added separate raw_get APIs for press and temp
 - updated README.md file with tag reference and mdelay description
+
+##
+
+</div>
+
+<input type="checkbox" id="collapse-section6" checked aria-hidden="true">
+<label for="collapse-section6" aria-hidden="true">V2.2.0 / 18-Dec-2024</label>
+<div>
+
+## Main changes
+
+- cosmetic change
+- Fix wrong bitshift for lpf value
+- Align driver to lps28dfw_STdC which is register compatible
 
 ##
 
