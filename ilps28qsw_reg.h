@@ -682,7 +682,6 @@ int32_t ilps28qsw_interrupt_mode_set(const stmdev_ctx_t *ctx,
 int32_t ilps28qsw_interrupt_mode_get(const stmdev_ctx_t *ctx,
                                      ilps28qsw_int_mode_t *val);
 
-int32_t ilps28qsw_ah_qvar_disable(const stmdev_ctx_t *ctx);
 int32_t ilps28qsw_ah_qvar_en_set(const stmdev_ctx_t *ctx, uint8_t val);
 int32_t ilps28qsw_ah_qvar_en_get(const stmdev_ctx_t *ctx, uint8_t *val);
 
