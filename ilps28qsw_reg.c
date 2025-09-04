@@ -17,6 +17,7 @@
  */
 
 #include "ilps28qsw_reg.h"
+#include <assert.h>
 
 /**
   * @defgroup    ILPS28QSW
@@ -95,7 +96,7 @@ int32_t __weak ilps28qsw_write_reg(const stmdev_ctx_t *ctx, uint8_t reg, uint8_t
   * @brief     Section collect all the utility functions needed by APIs.
   * @{
   *
-  */
+*/
 
 static void bytecpy(uint8_t *target, uint8_t *source)
 {
@@ -856,41 +857,22 @@ int32_t ilps28qsw_ah_qvar_data_get(const stmdev_ctx_t *ctx,
   * @brief  FIFO operation mode selection.[set]
   *
   * @param  ctx   communication interface handler.(ptr)
-  * @param  val   set the FIFO operation mode.(ptr)
+  * @param  val   set the FIFO operation mode.
   * @retval       interface status (MANDATORY: return 0 -> no Error)
   *
   */
-int32_t ilps28qsw_fifo_mode_set(const stmdev_ctx_t *ctx, ilps28qsw_fifo_md_t *val)
+int32_t ilps28qsw_fifo_mode_set(const stmdev_ctx_t *ctx, ilps28qsw_operation_t val)
 {
   ilps28qsw_fifo_ctrl_t fifo_ctrl;
-  ilps28qsw_fifo_wtm_t fifo_wtm;
-  uint8_t reg[2];
   int32_t ret;
 
-  ret = ilps28qsw_read_reg(ctx, ILPS28QSW_FIFO_CTRL, reg, 2);
+  ret = ilps28qsw_read_reg(ctx, ILPS28QSW_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
   if (ret == 0)
   {
-    bytecpy((uint8_t *)&fifo_ctrl, &reg[0]);
-    bytecpy((uint8_t *)&fifo_wtm, &reg[1]);
+    fifo_ctrl.f_mode = (uint8_t)val & 0x03U;
+    fifo_ctrl.trig_modes = ((uint8_t)val & 0x04U) >> 2;
 
-    fifo_ctrl.f_mode = (uint8_t)val->operation & 0x03U;
-    fifo_ctrl.trig_modes = ((uint8_t)val->operation & 0x04U) >> 2;
-
-    if (val->watermark != 0x00U)
-    {
-      fifo_ctrl.stop_on_wtm = PROPERTY_ENABLE;
-    }
-    else
-    {
-      fifo_ctrl.stop_on_wtm = PROPERTY_DISABLE;
-    }
-
-    fifo_wtm.wtm = val->watermark;
-
-    bytecpy(&reg[0], (uint8_t *)&fifo_ctrl);
-    bytecpy(&reg[1], (uint8_t *)&fifo_wtm);
-
-    ret = ilps28qsw_write_reg(ctx, ILPS28QSW_FIFO_CTRL, reg, 2);
+    ret = ilps28qsw_write_reg(ctx, ILPS28QSW_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
   }
   return ret;
 }
@@ -903,45 +885,128 @@ int32_t ilps28qsw_fifo_mode_set(const stmdev_ctx_t *ctx, ilps28qsw_fifo_md_t *va
   * @retval       interface status (MANDATORY: return 0 -> no Error)
   *
   */
-int32_t ilps28qsw_fifo_mode_get(const stmdev_ctx_t *ctx, ilps28qsw_fifo_md_t *val)
+int32_t ilps28qsw_fifo_mode_get(const stmdev_ctx_t *ctx, ilps28qsw_operation_t *val)
 {
   ilps28qsw_fifo_ctrl_t fifo_ctrl;
-  ilps28qsw_fifo_wtm_t fifo_wtm;
-  uint8_t reg[2];
   int32_t ret;
 
-  ret = ilps28qsw_read_reg(ctx, ILPS28QSW_FIFO_CTRL, reg, 2);
-
-  bytecpy((uint8_t *)&fifo_ctrl, &reg[0]);
-  bytecpy((uint8_t *)&fifo_wtm, &reg[1]);
+  ret = ilps28qsw_read_reg(ctx, ILPS28QSW_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
 
   switch ((fifo_ctrl.trig_modes << 2) | fifo_ctrl.f_mode)
   {
     case ILPS28QSW_BYPASS:
-      val->operation = ILPS28QSW_BYPASS;
+      *val = ILPS28QSW_BYPASS;
       break;
     case ILPS28QSW_FIFO:
-      val->operation = ILPS28QSW_FIFO;
+      *val = ILPS28QSW_FIFO;
       break;
     case ILPS28QSW_STREAM:
-      val->operation = ILPS28QSW_STREAM;
+      *val = ILPS28QSW_STREAM;
       break;
     case ILPS28QSW_STREAM_TO_FIFO:
-      val->operation = ILPS28QSW_STREAM_TO_FIFO;
+      *val = ILPS28QSW_STREAM_TO_FIFO;
       break;
     case ILPS28QSW_BYPASS_TO_STREAM:
-      val->operation = ILPS28QSW_BYPASS_TO_STREAM;
+      *val = ILPS28QSW_BYPASS_TO_STREAM;
       break;
     case ILPS28QSW_BYPASS_TO_FIFO:
-      val->operation = ILPS28QSW_BYPASS_TO_FIFO;
+      *val = ILPS28QSW_BYPASS_TO_FIFO;
       break;
     default:
-      val->operation = ILPS28QSW_BYPASS;
+      *val = ILPS28QSW_BYPASS;
       break;
   }
 
-  val->watermark = fifo_wtm.wtm;
+  return ret;
+}
 
+/**
+  * @brief  FIFO watermark selection.[set]
+  *
+  * @param  ctx   communication interface handler.(ptr)
+  * @param  val   watermark value (0 disable; max 128)
+  * @retval       interface status (MANDATORY: return 0 -> no Error)
+  *
+  */
+int32_t ilps28qsw_fifo_watermark_set(const stmdev_ctx_t *ctx, uint8_t val)
+{
+  ilps28qsw_fifo_wtm_t fifo_wtm;
+  int32_t ret;
+
+  assert(val < 128);
+
+  ret = ilps28qsw_read_reg(ctx, ILPS28QSW_FIFO_WTM, (uint8_t *)&fifo_wtm, 1);
+  if (ret == 0)
+  {
+    fifo_wtm.wtm = val & 0x7F;
+
+    ret = ilps28qsw_write_reg(ctx, ILPS28QSW_FIFO_WTM, (uint8_t *)&fifo_wtm, 1);
+  }
+  return ret;
+}
+
+/**
+  * @brief  FIFO watermark selection.[get]
+  *
+  * @param  ctx   communication interface handler.(ptr)
+  * @param  val   watermark value (0 disable; max 128)
+  * @retval       interface status (MANDATORY: return 0 -> no Error)
+  *
+  */
+int32_t ilps28qsw_fifo_watermark_get(const stmdev_ctx_t *ctx, uint8_t *val)
+{
+  ilps28qsw_fifo_wtm_t fifo_wtm;
+  int32_t ret;
+
+  ret = ilps28qsw_read_reg(ctx, ILPS28QSW_FIFO_WTM, (uint8_t *)&fifo_wtm, 1);
+  if (ret == 0)
+  {
+    *val = fifo_wtm.wtm;
+  }
+  return ret;
+}
+
+/**
+  * @brief  FIFO stop_on_wtm selection.[set]
+  *
+  * @param  ctx   communication interface handler.(ptr)
+  * @param  val   set the stop_on_wtm mode.(ptr)
+  * @retval       interface status (MANDATORY: return 0 -> no Error)
+  *
+  */
+int32_t ilps28qsw_fifo_stop_on_wtm_set(const stmdev_ctx_t *ctx, ilps28qsw_fifo_event_t val)
+{
+  ilps28qsw_fifo_ctrl_t fifo_ctrl;
+  int32_t ret;
+
+  ret = ilps28qsw_read_reg(ctx, ILPS28QSW_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
+  if (ret == 0)
+  {
+    fifo_ctrl.stop_on_wtm = (val == ILPS28QSW_FIFO_EV_WTM) ? 1 : 0;
+
+    ret = ilps28qsw_write_reg(ctx, ILPS28QSW_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
+  }
+  return ret;
+}
+
+/**
+  * @brief  FIFO stop_on_wtm selection.[get]
+  *
+  * @param  ctx   communication interface handler.(ptr)
+  * @param  val   set the stop_on_wtm mode.(ptr)
+  * @retval       interface status (MANDATORY: return 0 -> no Error)
+  *
+  */
+int32_t ilps28qsw_fifo_stop_on_wtm_get(const stmdev_ctx_t *ctx, ilps28qsw_fifo_event_t *val)
+{
+  ilps28qsw_fifo_ctrl_t fifo_ctrl;
+  int32_t ret;
+
+  ret = ilps28qsw_read_reg(ctx, ILPS28QSW_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
+  if (ret == 0)
+  {
+    *val = (fifo_ctrl.stop_on_wtm == 1) ? ILPS28QSW_FIFO_EV_WTM : ILPS28QSW_FIFO_EV_FULL;
+  }
   return ret;
 }
 
