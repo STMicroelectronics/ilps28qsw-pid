@@ -165,6 +165,11 @@ int32_t ilps28qsw_id_get(const stmdev_ctx_t *ctx, ilps28qsw_id_t *val)
   int32_t ret;
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_WHO_AM_I, &reg, 1);
+  if (ret != 0)
+  {
+    return ret;
+  }
+
   val->whoami = reg;
 
   return ret;
@@ -329,6 +334,12 @@ int32_t ilps28qsw_status_get(const stmdev_ctx_t *ctx, ilps28qsw_stat_t *val)
     ret = ilps28qsw_read_reg(ctx, ILPS28QSW_INTERRUPT_CFG,
                              (uint8_t *)&interrupt_cfg, 1);
   }
+
+  if (ret != 0)
+  {
+    return ret;
+  }
+
   val->sw_reset  = ctrl_reg2.swreset;
   val->boot      = int_source.boot_on;
   val->drdy_pres = status.p_da;
@@ -379,6 +390,10 @@ int32_t ilps28qsw_pin_conf_get(const stmdev_ctx_t *ctx, ilps28qsw_pin_conf_t *va
   int32_t ret;
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_IF_CTRL, (uint8_t *)&if_ctrl, 1);
+  if (ret != 0)
+  {
+    return ret;
+  }
   val->sda_pull_up  = if_ctrl.sda_pu_en;
 
   return ret;
@@ -401,15 +416,21 @@ int32_t ilps28qsw_all_sources_get(const stmdev_ctx_t *ctx,
   int32_t ret;
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_STATUS, (uint8_t *)&status, 1);
-  if (ret == 0)
+  if (ret != 0)
   {
-    ret = ilps28qsw_read_reg(ctx, ILPS28QSW_INT_SOURCE,
-                             (uint8_t *)&int_source, 1);
+    return ret;
   }
-  if (ret == 0)
+  ret = ilps28qsw_read_reg(ctx, ILPS28QSW_INT_SOURCE,
+                           (uint8_t *)&int_source, 1);
+  if (ret != 0)
   {
-    ret = ilps28qsw_read_reg(ctx, ILPS28QSW_FIFO_STATUS2,
-                             (uint8_t *)&fifo_status2, 1);
+    return ret;
+  }
+  ret = ilps28qsw_read_reg(ctx, ILPS28QSW_FIFO_STATUS2,
+                           (uint8_t *)&fifo_status2, 1);
+  if (ret != 0)
+  {
+    return ret;
   }
 
   val->drdy_pres        = status.p_da;
@@ -521,6 +542,10 @@ int32_t ilps28qsw_mode_get(const stmdev_ctx_t *ctx, ilps28qsw_md_t *val)
   int32_t ret;
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_CTRL_REG1, reg, 3);
+  if (ret != 0)
+  {
+    return ret;
+  }
 
   if (ret == 0)
   {
@@ -690,6 +715,11 @@ int32_t ilps28qsw_ah_qvar_en_get(const stmdev_ctx_t *ctx, uint8_t *val)
   int32_t ret;
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_CTRL_REG3, (uint8_t *)&ctrl_reg3, 1);
+  if (ret != 0)
+  {
+    return ret;
+  }
+
   *val = ctrl_reg3.ah_qvar_en;
 
   return ret;
@@ -711,6 +741,10 @@ int32_t ilps28qsw_data_get(const stmdev_ctx_t *ctx, ilps28qsw_md_t *md,
   int32_t ret;
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_PRESS_OUT_XL, buff, 5);
+  if (ret != 0)
+  {
+    return ret;
+  }
 
   /* pressure conversion */
   data->pressure.raw = (int32_t)buff[2];
@@ -783,6 +817,11 @@ int32_t ilps28qsw_pressure_raw_get(const stmdev_ctx_t *ctx, uint32_t *buff)
   uint8_t reg[3];
 
   ret =  ilps28qsw_read_reg(ctx, ILPS28QSW_PRESS_OUT_XL, reg, 3);
+  if (ret != 0)
+  {
+    return ret;
+  }
+
   *buff = reg[2];
   *buff = (*buff * 256U) + reg[1];
   *buff = (*buff * 256U) + reg[0];
@@ -805,6 +844,11 @@ int32_t ilps28qsw_temperature_raw_get(const stmdev_ctx_t *ctx, int16_t *buff)
   uint8_t reg[2];
 
   ret =  ilps28qsw_read_reg(ctx, ILPS28QSW_TEMP_OUT_L, reg, 2);
+  if (ret != 0)
+  {
+    return ret;
+  }
+
   *buff = (int16_t)reg[1];
   *buff = (*buff * 256) + (int16_t)reg[0];
 
@@ -827,6 +871,10 @@ int32_t ilps28qsw_ah_qvar_data_get(const stmdev_ctx_t *ctx,
   int32_t ret;
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_PRESS_OUT_XL, buff, 3);
+  if (ret != 0)
+  {
+    return ret;
+  }
 
   /* QVAR conversion */
   data->raw = (int32_t)buff[2];
@@ -891,6 +939,10 @@ int32_t ilps28qsw_fifo_mode_get(const stmdev_ctx_t *ctx, ilps28qsw_operation_t *
   int32_t ret;
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
+  if (ret != 0)
+  {
+    return ret;
+  }
 
   switch ((fifo_ctrl.trig_modes << 2) | fifo_ctrl.f_mode)
   {
@@ -1026,6 +1078,10 @@ int32_t ilps28qsw_fifo_level_get(const stmdev_ctx_t *ctx, uint8_t *val)
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_FIFO_STATUS1,
                            (uint8_t *)&fifo_status1, 1);
+  if (ret != 0)
+  {
+    return ret;
+  }
 
   *val = fifo_status1.fss;
 
@@ -1053,6 +1109,11 @@ int32_t ilps28qsw_fifo_data_get(const stmdev_ctx_t *ctx, uint8_t samp,
   for (i = 0U; i < samp; i++)
   {
     ret = ilps28qsw_read_reg(ctx, ILPS28QSW_FIFO_DATA_OUT_PRESS_XL, fifo_data, 3);
+    if (ret != 0)
+    {
+      return ret;
+    }
+
     data[i].raw = (int32_t)fifo_data[2];
     data[i].raw = (data[i].raw * 256) + (int32_t)fifo_data[1];
     data[i].raw = (data[i].raw * 256) + (int32_t)fifo_data[0];
@@ -1233,6 +1294,10 @@ int32_t ilps28qsw_int_on_threshold_mode_get(const stmdev_ctx_t *ctx,
   int32_t ret;
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_INTERRUPT_CFG, reg, 3);
+  if (ret != 0)
+  {
+    return ret;
+  }
 
   bytecpy((uint8_t *)&interrupt_cfg, &reg[0]);
   bytecpy((uint8_t *)&ths_p_l, &reg[1]);
@@ -1304,6 +1369,10 @@ int32_t ilps28qsw_reference_mode_get(const stmdev_ctx_t *ctx, ilps28qsw_ref_md_t
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_INTERRUPT_CFG,
                            (uint8_t *)&interrupt_cfg, 1);
+  if (ret != 0)
+  {
+    return ret;
+  }
 
   switch ((interrupt_cfg.reset_az << 1) |
           interrupt_cfg.autorefp)
@@ -1337,6 +1406,10 @@ int32_t ilps28qsw_refp_get(const stmdev_ctx_t *ctx, int16_t *val)
   int32_t ret;
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_REF_P_L, reg, 2);
+  if (ret != 0)
+  {
+    return ret;
+  }
 
   *val = (int16_t)reg[1];
   *val = *val * 256 + (int16_t)reg[0];
@@ -1379,6 +1452,10 @@ int32_t ilps28qsw_opc_get(const stmdev_ctx_t *ctx, int16_t *val)
   int32_t ret;
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_RPDS_L, reg, 2);
+  if (ret != 0)
+  {
+    return ret;
+  }
 
   *val = (int16_t)reg[1];
   *val = *val * 256 + (int16_t)reg[0];
