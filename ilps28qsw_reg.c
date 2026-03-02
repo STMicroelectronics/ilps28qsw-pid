@@ -445,6 +445,26 @@ int32_t ilps28qsw_all_sources_get(const stmdev_ctx_t *ctx,
   return ret;
 }
 
+/**
+  * @brief  Data Ready event.[get]
+  *
+  * @param  ctx      read / write interface definitions
+  * @param  val      ilps28qsw_data_ready_t struct
+  * @retval          interface status (MANDATORY: return 0 -> no Error)
+  *
+  */
+int32_t ilps28qsw_flag_data_ready_get(const stmdev_ctx_t *ctx, ilps28qsw_data_ready_t *val)
+{
+  ilps28qsw_status_t status;
+  int32_t ret;
+
+  ret = ilps28qsw_read_reg(ctx, ILPS28QSW_STATUS, (uint8_t *)&status, 1);
+
+  val->drdy_pres        = status.p_da;
+  val->drdy_temp        = status.t_da;
+
+  return ret;
+}
 
 /**
   * @brief  Sensor conversion parameters selection.[set]
