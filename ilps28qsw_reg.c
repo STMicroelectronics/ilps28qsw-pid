@@ -17,7 +17,6 @@
  */
 
 #include "ilps28qsw_reg.h"
-#include <assert.h>
 
 /**
   * @defgroup    ILPS28QSW
@@ -1005,7 +1004,11 @@ int32_t ilps28qsw_fifo_watermark_set(const stmdev_ctx_t *ctx, uint8_t val)
   ilps28qsw_fifo_wtm_t fifo_wtm;
   int32_t ret;
 
-  assert(val < 128);
+  if (val >= 128)
+  {
+    ret = -1;
+    goto exit;
+  }
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_FIFO_WTM, (uint8_t *)&fifo_wtm, 1);
   if (ret == 0)
@@ -1014,6 +1017,8 @@ int32_t ilps28qsw_fifo_watermark_set(const stmdev_ctx_t *ctx, uint8_t val)
 
     ret = ilps28qsw_write_reg(ctx, ILPS28QSW_FIFO_WTM, (uint8_t *)&fifo_wtm, 1);
   }
+
+exit:
   return ret;
 }
 
