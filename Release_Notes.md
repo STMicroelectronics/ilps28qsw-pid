@@ -30,7 +30,22 @@ This directory contains the ILPS28QSW component drivers.
 # Update history
 
 ::: {.collapse}
-<input type="checkbox" id="collapse-section8" checked aria-hidden="true">
+<input type="checkbox" id="collapse-section9" checked aria-hidden="true">
+<label for="collapse-section9" aria-hidden="true">V3.1.0 / 18-Mar-2026</label>
+<div>
+
+## Main changes
+
+- Change switch cases to use hex values
+- Re-order update history (most updated on top)
+- Replace assert with normal check and return
+- Add fifo_status_get API
+- Add data_ready_get API
+
+##
+
+</div>
+<input type="checkbox" id="collapse-section8" aria-hidden="true">
 <label for="collapse-section8" aria-hidden="true">V3.0.0 / 07-Oct-2025</label>
 <div>
 
