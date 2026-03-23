@@ -48,7 +48,7 @@
 int32_t __weak ilps28qsw_read_reg(const stmdev_ctx_t *ctx, uint8_t reg, uint8_t *data,
                                   uint16_t len)
 {
-  int32_t ret;
+  int32_t ret = 0;
 
   if (ctx == NULL)
   {
@@ -73,7 +73,7 @@ int32_t __weak ilps28qsw_read_reg(const stmdev_ctx_t *ctx, uint8_t reg, uint8_t 
 int32_t __weak ilps28qsw_write_reg(const stmdev_ctx_t *ctx, uint8_t reg, uint8_t *data,
                                    uint16_t len)
 {
-  int32_t ret;
+  int32_t ret = 0;
 
   if (ctx == NULL)
   {
@@ -160,8 +160,8 @@ float_t ilps28qsw_from_lsb_to_mv(int32_t lsb)
   */
 int32_t ilps28qsw_id_get(const stmdev_ctx_t *ctx, ilps28qsw_id_t *val)
 {
-  uint8_t reg;
-  int32_t ret;
+  uint8_t reg = {0};
+  int32_t ret = {0};
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_WHO_AM_I, &reg, 1);
   if (ret != 0)
@@ -184,8 +184,8 @@ int32_t ilps28qsw_id_get(const stmdev_ctx_t *ctx, ilps28qsw_id_t *val)
   */
 int32_t ilps28qsw_bus_mode_set(const stmdev_ctx_t *ctx, ilps28qsw_bus_mode_t *val)
 {
-  ilps28qsw_i3c_if_ctrl_t i3c_if_ctrl;
-  int32_t ret;
+  ilps28qsw_i3c_if_ctrl_t i3c_if_ctrl = {0};
+  int32_t ret = {0};
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_I3C_IF_CTRL,
                            (uint8_t *)&i3c_if_ctrl, 1);
@@ -210,8 +210,8 @@ int32_t ilps28qsw_bus_mode_set(const stmdev_ctx_t *ctx, ilps28qsw_bus_mode_t *va
   */
 int32_t ilps28qsw_bus_mode_get(const stmdev_ctx_t *ctx, ilps28qsw_bus_mode_t *val)
 {
-  ilps28qsw_i3c_if_ctrl_t i3c_if_ctrl;
-  int32_t ret;
+  ilps28qsw_i3c_if_ctrl_t i3c_if_ctrl = {0};
+  int32_t ret = 0;
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_I3C_IF_CTRL, (uint8_t *)&i3c_if_ctrl, 1);
   if (ret == 0)
@@ -262,10 +262,10 @@ int32_t ilps28qsw_bus_mode_get(const stmdev_ctx_t *ctx, ilps28qsw_bus_mode_t *va
   */
 int32_t ilps28qsw_init_set(const stmdev_ctx_t *ctx, ilps28qsw_init_t val)
 {
-  ilps28qsw_ctrl_reg2_t ctrl_reg2;
-  ilps28qsw_ctrl_reg3_t ctrl_reg3;
-  uint8_t reg[2];
-  int32_t ret;
+  ilps28qsw_ctrl_reg2_t ctrl_reg2 = {0};
+  ilps28qsw_ctrl_reg3_t ctrl_reg3 = {0};
+  uint8_t reg[2] = {0};
+  int32_t ret = 0;
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_CTRL_REG2, reg, 2);
   if (ret == 0)
@@ -312,11 +312,11 @@ int32_t ilps28qsw_init_set(const stmdev_ctx_t *ctx, ilps28qsw_init_t val)
   */
 int32_t ilps28qsw_status_get(const stmdev_ctx_t *ctx, ilps28qsw_stat_t *val)
 {
-  ilps28qsw_interrupt_cfg_t interrupt_cfg;
-  ilps28qsw_int_source_t int_source;
-  ilps28qsw_ctrl_reg2_t ctrl_reg2;
-  ilps28qsw_status_t status;
-  int32_t ret;
+  ilps28qsw_interrupt_cfg_t interrupt_cfg = {0};
+  ilps28qsw_int_source_t int_source = {0};
+  ilps28qsw_ctrl_reg2_t ctrl_reg2 = {0};
+  ilps28qsw_status_t status = {0};
+  int32_t ret = 0;
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_CTRL_REG2,
                            (uint8_t *)&ctrl_reg2, 1);
@@ -361,8 +361,8 @@ int32_t ilps28qsw_status_get(const stmdev_ctx_t *ctx, ilps28qsw_stat_t *val)
   */
 int32_t ilps28qsw_pin_conf_set(const stmdev_ctx_t *ctx, ilps28qsw_pin_conf_t *val)
 {
-  ilps28qsw_if_ctrl_t if_ctrl;
-  int32_t ret;
+  ilps28qsw_if_ctrl_t if_ctrl = {0};
+  int32_t ret = 0;
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_IF_CTRL, (uint8_t *)&if_ctrl, 1);
 
@@ -385,8 +385,8 @@ int32_t ilps28qsw_pin_conf_set(const stmdev_ctx_t *ctx, ilps28qsw_pin_conf_t *va
   */
 int32_t ilps28qsw_pin_conf_get(const stmdev_ctx_t *ctx, ilps28qsw_pin_conf_t *val)
 {
-  ilps28qsw_if_ctrl_t if_ctrl;
-  int32_t ret;
+  ilps28qsw_if_ctrl_t if_ctrl = {0};
+  int32_t ret = 0;
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_IF_CTRL, (uint8_t *)&if_ctrl, 1);
   if (ret != 0)
@@ -409,10 +409,10 @@ int32_t ilps28qsw_pin_conf_get(const stmdev_ctx_t *ctx, ilps28qsw_pin_conf_t *va
 int32_t ilps28qsw_all_sources_get(const stmdev_ctx_t *ctx,
                                   ilps28qsw_all_sources_t *val)
 {
-  ilps28qsw_fifo_status2_t fifo_status2;
-  ilps28qsw_int_source_t int_source;
-  ilps28qsw_status_t status;
-  int32_t ret;
+  ilps28qsw_fifo_status2_t fifo_status2 = {0};
+  ilps28qsw_int_source_t int_source = {0};
+  ilps28qsw_status_t status = {0};
+  int32_t ret = {0};
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_STATUS, (uint8_t *)&status, 1);
   if (ret != 0)
@@ -454,8 +454,8 @@ int32_t ilps28qsw_all_sources_get(const stmdev_ctx_t *ctx,
   */
 int32_t ilps28qsw_flag_data_ready_get(const stmdev_ctx_t *ctx, ilps28qsw_data_ready_t *val)
 {
-  ilps28qsw_status_t status;
-  int32_t ret;
+  ilps28qsw_status_t status = {0};
+  int32_t ret = {0};
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_STATUS, (uint8_t *)&status, 1);
 
@@ -475,13 +475,13 @@ int32_t ilps28qsw_flag_data_ready_get(const stmdev_ctx_t *ctx, ilps28qsw_data_re
   */
 int32_t ilps28qsw_mode_set(const stmdev_ctx_t *ctx, ilps28qsw_md_t *val)
 {
-  ilps28qsw_ctrl_reg1_t ctrl_reg1;
-  ilps28qsw_ctrl_reg2_t ctrl_reg2;
-  ilps28qsw_ctrl_reg3_t ctrl_reg3;
-  ilps28qsw_fifo_ctrl_t fifo_ctrl;
+  ilps28qsw_ctrl_reg1_t ctrl_reg1 = {0};
+  ilps28qsw_ctrl_reg2_t ctrl_reg2 = {0};
+  ilps28qsw_ctrl_reg3_t ctrl_reg3 = {0};
+  ilps28qsw_fifo_ctrl_t fifo_ctrl = {0};
   uint8_t odr_save = 0, ah_qvar_en_save = 0;
-  uint8_t reg[3];
-  int32_t ret;
+  uint8_t reg[3] = {0};
+  int32_t ret = {0};
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_CTRL_REG1, reg, 3);
 
@@ -554,11 +554,11 @@ int32_t ilps28qsw_mode_set(const stmdev_ctx_t *ctx, ilps28qsw_md_t *val)
   */
 int32_t ilps28qsw_mode_get(const stmdev_ctx_t *ctx, ilps28qsw_md_t *val)
 {
-  ilps28qsw_ctrl_reg1_t ctrl_reg1;
-  ilps28qsw_ctrl_reg2_t ctrl_reg2;
-  ilps28qsw_ctrl_reg3_t ctrl_reg3;
-  uint8_t reg[3];
-  int32_t ret;
+  ilps28qsw_ctrl_reg1_t ctrl_reg1 = {0};
+  ilps28qsw_ctrl_reg2_t ctrl_reg2 = {0};
+  ilps28qsw_ctrl_reg3_t ctrl_reg3 = {0};
+  uint8_t reg[3] = {0};
+  int32_t ret = {0};
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_CTRL_REG1, reg, 3);
   if (ret != 0)
@@ -681,7 +681,7 @@ int32_t ilps28qsw_mode_get(const stmdev_ctx_t *ctx, ilps28qsw_md_t *val)
   */
 int32_t ilps28qsw_trigger_sw(const stmdev_ctx_t *ctx, ilps28qsw_md_t *md)
 {
-  ilps28qsw_ctrl_reg2_t ctrl_reg2;
+  ilps28qsw_ctrl_reg2_t ctrl_reg2 = {0};
   int32_t ret = 0;
 
   if (md->odr == ILPS28QSW_ONE_SHOT)
@@ -706,8 +706,8 @@ int32_t ilps28qsw_trigger_sw(const stmdev_ctx_t *ctx, ilps28qsw_md_t *md)
   */
 int32_t ilps28qsw_ah_qvar_en_set(const stmdev_ctx_t *ctx, uint8_t val)
 {
-  ilps28qsw_ctrl_reg3_t ctrl_reg3;
-  int32_t ret;
+  ilps28qsw_ctrl_reg3_t ctrl_reg3 = {0};
+  int32_t ret = {0};
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_CTRL_REG3, (uint8_t *)&ctrl_reg3, 1);
 
@@ -730,8 +730,8 @@ int32_t ilps28qsw_ah_qvar_en_set(const stmdev_ctx_t *ctx, uint8_t val)
   */
 int32_t ilps28qsw_ah_qvar_en_get(const stmdev_ctx_t *ctx, uint8_t *val)
 {
-  ilps28qsw_ctrl_reg3_t ctrl_reg3;
-  int32_t ret;
+  ilps28qsw_ctrl_reg3_t ctrl_reg3 = {0};
+  int32_t ret = {0};
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_CTRL_REG3, (uint8_t *)&ctrl_reg3, 1);
   if (ret != 0)
@@ -756,8 +756,8 @@ int32_t ilps28qsw_ah_qvar_en_get(const stmdev_ctx_t *ctx, uint8_t *val)
 int32_t ilps28qsw_data_get(const stmdev_ctx_t *ctx, ilps28qsw_md_t *md,
                            ilps28qsw_data_t *data)
 {
-  uint8_t buff[5];
-  int32_t ret;
+  uint8_t buff[5] = {0};
+  int32_t ret = {0};
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_PRESS_OUT_XL, buff, 5);
   if (ret != 0)
@@ -832,8 +832,8 @@ int32_t ilps28qsw_data_get(const stmdev_ctx_t *ctx, ilps28qsw_md_t *md,
   */
 int32_t ilps28qsw_pressure_raw_get(const stmdev_ctx_t *ctx, uint32_t *buff)
 {
-  int32_t ret;
-  uint8_t reg[3];
+  int32_t ret = {0};
+  uint8_t reg[3] = {0};
 
   ret =  ilps28qsw_read_reg(ctx, ILPS28QSW_PRESS_OUT_XL, reg, 3);
   if (ret != 0)
@@ -859,8 +859,8 @@ int32_t ilps28qsw_pressure_raw_get(const stmdev_ctx_t *ctx, uint32_t *buff)
   */
 int32_t ilps28qsw_temperature_raw_get(const stmdev_ctx_t *ctx, int16_t *buff)
 {
-  int32_t ret;
-  uint8_t reg[2];
+  int32_t ret = {0};
+  uint8_t reg[2] = {0};
 
   ret =  ilps28qsw_read_reg(ctx, ILPS28QSW_TEMP_OUT_L, reg, 2);
   if (ret != 0)
@@ -886,8 +886,8 @@ int32_t ilps28qsw_temperature_raw_get(const stmdev_ctx_t *ctx, int16_t *buff)
 int32_t ilps28qsw_ah_qvar_data_get(const stmdev_ctx_t *ctx,
                                    ilps28qsw_ah_qvar_data_t *data)
 {
-  uint8_t buff[5];
-  int32_t ret;
+  uint8_t buff[5] = {0};
+  int32_t ret = {0};
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_PRESS_OUT_XL, buff, 3);
   if (ret != 0)
@@ -930,8 +930,8 @@ int32_t ilps28qsw_ah_qvar_data_get(const stmdev_ctx_t *ctx,
   */
 int32_t ilps28qsw_fifo_mode_set(const stmdev_ctx_t *ctx, ilps28qsw_operation_t val)
 {
-  ilps28qsw_fifo_ctrl_t fifo_ctrl;
-  int32_t ret;
+  ilps28qsw_fifo_ctrl_t fifo_ctrl = {0};
+  int32_t ret = {0};
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
   if (ret == 0)
@@ -954,8 +954,8 @@ int32_t ilps28qsw_fifo_mode_set(const stmdev_ctx_t *ctx, ilps28qsw_operation_t v
   */
 int32_t ilps28qsw_fifo_mode_get(const stmdev_ctx_t *ctx, ilps28qsw_operation_t *val)
 {
-  ilps28qsw_fifo_ctrl_t fifo_ctrl;
-  int32_t ret;
+  ilps28qsw_fifo_ctrl_t fifo_ctrl = {0};
+  int32_t ret = {0};
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
   if (ret != 0)
@@ -1001,8 +1001,8 @@ int32_t ilps28qsw_fifo_mode_get(const stmdev_ctx_t *ctx, ilps28qsw_operation_t *
   */
 int32_t ilps28qsw_fifo_watermark_set(const stmdev_ctx_t *ctx, uint8_t val)
 {
-  ilps28qsw_fifo_wtm_t fifo_wtm;
-  int32_t ret;
+  ilps28qsw_fifo_wtm_t fifo_wtm = {0};
+  int32_t ret = {0};
 
   if (val >= 128)
   {
@@ -1032,8 +1032,8 @@ exit:
   */
 int32_t ilps28qsw_fifo_watermark_get(const stmdev_ctx_t *ctx, uint8_t *val)
 {
-  ilps28qsw_fifo_wtm_t fifo_wtm;
-  int32_t ret;
+  ilps28qsw_fifo_wtm_t fifo_wtm = {0};
+  int32_t ret = {0};
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_FIFO_WTM, (uint8_t *)&fifo_wtm, 1);
   if (ret == 0)
@@ -1053,8 +1053,8 @@ int32_t ilps28qsw_fifo_watermark_get(const stmdev_ctx_t *ctx, uint8_t *val)
   */
 int32_t ilps28qsw_fifo_stop_on_wtm_set(const stmdev_ctx_t *ctx, ilps28qsw_fifo_event_t val)
 {
-  ilps28qsw_fifo_ctrl_t fifo_ctrl;
-  int32_t ret;
+  ilps28qsw_fifo_ctrl_t fifo_ctrl = {0};
+  int32_t ret = {0};
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
   if (ret == 0)
@@ -1076,8 +1076,8 @@ int32_t ilps28qsw_fifo_stop_on_wtm_set(const stmdev_ctx_t *ctx, ilps28qsw_fifo_e
   */
 int32_t ilps28qsw_fifo_stop_on_wtm_get(const stmdev_ctx_t *ctx, ilps28qsw_fifo_event_t *val)
 {
-  ilps28qsw_fifo_ctrl_t fifo_ctrl;
-  int32_t ret;
+  ilps28qsw_fifo_ctrl_t fifo_ctrl = {0};
+  int32_t ret = {0};
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
   if (ret == 0)
@@ -1097,10 +1097,10 @@ int32_t ilps28qsw_fifo_stop_on_wtm_get(const stmdev_ctx_t *ctx, ilps28qsw_fifo_e
   */
 int32_t ilps28qsw_fifo_status_get(const stmdev_ctx_t *ctx, ilps28qsw_fifo_status_t *val)
 {
-  ilps28qsw_fifo_status1_t fifo_status1;
-  ilps28qsw_fifo_status2_t fifo_status2;
-  uint8_t reg[2];
-  int32_t ret;
+  ilps28qsw_fifo_status1_t fifo_status1 = {0};
+  ilps28qsw_fifo_status2_t fifo_status2 = {0};
+  uint8_t reg[2] = {0};
+  int32_t ret = {0};
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_FIFO_STATUS1, &reg[0], 2);
   if (ret != 0)
@@ -1133,8 +1133,8 @@ int32_t ilps28qsw_fifo_status_get(const stmdev_ctx_t *ctx, ilps28qsw_fifo_status
 int32_t ilps28qsw_fifo_data_get(const stmdev_ctx_t *ctx, uint8_t samp,
                                 ilps28qsw_md_t *md, ilps28qsw_fifo_data_t *data)
 {
-  uint8_t fifo_data[3];
-  uint8_t i;
+  uint8_t fifo_data[3] = {0};
+  uint8_t i = {0};
   int32_t ret = 0;
 
   for (i = 0U; i < samp; i++)
@@ -1221,8 +1221,8 @@ int32_t ilps28qsw_fifo_data_get(const stmdev_ctx_t *ctx, uint8_t samp,
 int32_t ilps28qsw_interrupt_mode_set(const stmdev_ctx_t *ctx,
                                      ilps28qsw_int_mode_t *val)
 {
-  ilps28qsw_interrupt_cfg_t interrupt_cfg;
-  int32_t ret;
+  ilps28qsw_interrupt_cfg_t interrupt_cfg = {0};
+  int32_t ret = {0};
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_INTERRUPT_CFG,
                            (uint8_t *)&interrupt_cfg, 1);
@@ -1246,8 +1246,8 @@ int32_t ilps28qsw_interrupt_mode_set(const stmdev_ctx_t *ctx,
 int32_t ilps28qsw_interrupt_mode_get(const stmdev_ctx_t *ctx,
                                      ilps28qsw_int_mode_t *val)
 {
-  ilps28qsw_interrupt_cfg_t interrupt_cfg;
-  int32_t ret;
+  ilps28qsw_interrupt_cfg_t interrupt_cfg = {0};
+  int32_t ret = {0};
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_INTERRUPT_CFG,
                            (uint8_t *)&interrupt_cfg, 1);
@@ -1280,11 +1280,11 @@ int32_t ilps28qsw_interrupt_mode_get(const stmdev_ctx_t *ctx,
 int32_t ilps28qsw_int_on_threshold_mode_set(const stmdev_ctx_t *ctx,
                                             ilps28qsw_int_th_md_t *val)
 {
-  ilps28qsw_interrupt_cfg_t interrupt_cfg;
-  ilps28qsw_ths_p_l_t ths_p_l;
-  ilps28qsw_ths_p_h_t ths_p_h;
-  uint8_t reg[3];
-  int32_t ret;
+  ilps28qsw_interrupt_cfg_t interrupt_cfg = {0};
+  ilps28qsw_ths_p_l_t ths_p_l = {0};
+  ilps28qsw_ths_p_h_t ths_p_h = {0};
+  uint8_t reg[3] = {0};
+  int32_t ret = {0};
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_INTERRUPT_CFG, reg, 3);
   if (ret == 0)
@@ -1318,11 +1318,11 @@ int32_t ilps28qsw_int_on_threshold_mode_set(const stmdev_ctx_t *ctx,
 int32_t ilps28qsw_int_on_threshold_mode_get(const stmdev_ctx_t *ctx,
                                             ilps28qsw_int_th_md_t *val)
 {
-  ilps28qsw_interrupt_cfg_t interrupt_cfg;
-  ilps28qsw_ths_p_l_t ths_p_l;
-  ilps28qsw_ths_p_h_t ths_p_h;
-  uint8_t reg[3];
-  int32_t ret;
+  ilps28qsw_interrupt_cfg_t interrupt_cfg = {0};
+  ilps28qsw_ths_p_l_t ths_p_l = {0};
+  ilps28qsw_ths_p_h_t ths_p_h = {0};
+  uint8_t reg[3] = {0};
+  int32_t ret = {0};
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_INTERRUPT_CFG, reg, 3);
   if (ret != 0)
@@ -1365,8 +1365,8 @@ int32_t ilps28qsw_int_on_threshold_mode_get(const stmdev_ctx_t *ctx,
   */
 int32_t ilps28qsw_reference_mode_set(const stmdev_ctx_t *ctx, ilps28qsw_ref_md_t *val)
 {
-  ilps28qsw_interrupt_cfg_t interrupt_cfg;
-  int32_t ret;
+  ilps28qsw_interrupt_cfg_t interrupt_cfg = {0};
+  int32_t ret = {0};
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_INTERRUPT_CFG,
                            (uint8_t *)&interrupt_cfg, 1);
@@ -1395,8 +1395,8 @@ int32_t ilps28qsw_reference_mode_set(const stmdev_ctx_t *ctx, ilps28qsw_ref_md_t
   */
 int32_t ilps28qsw_reference_mode_get(const stmdev_ctx_t *ctx, ilps28qsw_ref_md_t *val)
 {
-  ilps28qsw_interrupt_cfg_t interrupt_cfg;
-  int32_t ret;
+  ilps28qsw_interrupt_cfg_t interrupt_cfg = {0};
+  int32_t ret = {0};
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_INTERRUPT_CFG,
                            (uint8_t *)&interrupt_cfg, 1);
@@ -1436,8 +1436,8 @@ int32_t ilps28qsw_reference_mode_get(const stmdev_ctx_t *ctx, ilps28qsw_ref_md_t
   */
 int32_t ilps28qsw_refp_get(const stmdev_ctx_t *ctx, int16_t *val)
 {
-  uint8_t reg[2];
-  int32_t ret;
+  uint8_t reg[2] = {0};
+  int32_t ret = {0};
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_REF_P_L, reg, 2);
   if (ret != 0)
@@ -1461,8 +1461,8 @@ int32_t ilps28qsw_refp_get(const stmdev_ctx_t *ctx, int16_t *val)
   */
 int32_t ilps28qsw_opc_set(const stmdev_ctx_t *ctx, int16_t val)
 {
-  uint8_t reg[2];
-  int32_t ret;
+  uint8_t reg[2] = {0};
+  int32_t ret = {0};
 
   reg[1] = (uint8_t)(((uint16_t)val & 0xFF00U) / 256U);
   reg[0] = (uint8_t)((uint16_t)val & 0x00FFU);
@@ -1482,8 +1482,8 @@ int32_t ilps28qsw_opc_set(const stmdev_ctx_t *ctx, int16_t val)
   */
 int32_t ilps28qsw_opc_get(const stmdev_ctx_t *ctx, int16_t *val)
 {
-  uint8_t reg[2];
-  int32_t ret;
+  uint8_t reg[2] = {0};
+  int32_t ret = {0};
 
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_RPDS_L, reg, 2);
   if (ret != 0)
