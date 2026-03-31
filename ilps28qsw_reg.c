@@ -97,7 +97,7 @@ int32_t __weak ilps28qsw_write_reg(const stmdev_ctx_t *ctx, uint8_t reg, uint8_t
   *
 */
 
-static void bytecpy(uint8_t *target, uint8_t *source)
+static void bytecpy(uint8_t *target, const uint8_t *source)
 {
   if ((target != NULL) && (source != NULL))
   {
@@ -182,7 +182,7 @@ int32_t ilps28qsw_id_get(const stmdev_ctx_t *ctx, ilps28qsw_id_t *val)
   * @retval       interface status (MANDATORY: return 0 -> no Error)
   *
   */
-int32_t ilps28qsw_bus_mode_set(const stmdev_ctx_t *ctx, ilps28qsw_bus_mode_t *val)
+int32_t ilps28qsw_bus_mode_set(const stmdev_ctx_t *ctx, const ilps28qsw_bus_mode_t *val)
 {
   ilps28qsw_i3c_if_ctrl_t i3c_if_ctrl = {0};
   int32_t ret = {0};
@@ -359,7 +359,7 @@ int32_t ilps28qsw_status_get(const stmdev_ctx_t *ctx, ilps28qsw_stat_t *val)
   * @retval       interface status (MANDATORY: return 0 -> no Error)
   *
   */
-int32_t ilps28qsw_pin_conf_set(const stmdev_ctx_t *ctx, ilps28qsw_pin_conf_t *val)
+int32_t ilps28qsw_pin_conf_set(const stmdev_ctx_t *ctx, const ilps28qsw_pin_conf_t *val)
 {
   ilps28qsw_if_ctrl_t if_ctrl = {0};
   int32_t ret = 0;
@@ -473,7 +473,7 @@ int32_t ilps28qsw_flag_data_ready_get(const stmdev_ctx_t *ctx, ilps28qsw_data_re
   * @retval       interface status (MANDATORY: return 0 -> no Error)
   *
   */
-int32_t ilps28qsw_mode_set(const stmdev_ctx_t *ctx, ilps28qsw_md_t *val)
+int32_t ilps28qsw_mode_set(const stmdev_ctx_t *ctx, const ilps28qsw_md_t *val)
 {
   ilps28qsw_ctrl_reg1_t ctrl_reg1 = {0};
   ilps28qsw_ctrl_reg2_t ctrl_reg2 = {0};
@@ -566,108 +566,105 @@ int32_t ilps28qsw_mode_get(const stmdev_ctx_t *ctx, ilps28qsw_md_t *val)
     return ret;
   }
 
-  if (ret == 0)
+  bytecpy((uint8_t *)&ctrl_reg1, &reg[0]);
+  bytecpy((uint8_t *)&ctrl_reg2, &reg[1]);
+  bytecpy((uint8_t *)&ctrl_reg3, &reg[2]);
+
+  switch (ctrl_reg2.fs_mode)
   {
-    bytecpy((uint8_t *)&ctrl_reg1, &reg[0]);
-    bytecpy((uint8_t *)&ctrl_reg2, &reg[1]);
-    bytecpy((uint8_t *)&ctrl_reg3, &reg[2]);
-
-    switch (ctrl_reg2.fs_mode)
-    {
-      case 0x00:
-        val->fs = ILPS28QSW_1260hPa;
-        break;
-      case 0x01:
-        val->fs = ILPS28QSW_4060hPa;
-        break;
-      default:
-        val->fs = ILPS28QSW_1260hPa;
-        break;
-    }
-
-    switch (ctrl_reg1.odr)
-    {
-      case 0x00:
-        val->odr = ILPS28QSW_ONE_SHOT;
-        break;
-      case 0x01:
-        val->odr = ILPS28QSW_1Hz;
-        break;
-      case 0x02:
-        val->odr = ILPS28QSW_4Hz;
-        break;
-      case 0x03:
-        val->odr = ILPS28QSW_10Hz;
-        break;
-      case 0x04:
-        val->odr = ILPS28QSW_25Hz;
-        break;
-      case 0x05:
-        val->odr = ILPS28QSW_50Hz;
-        break;
-      case 0x06:
-        val->odr = ILPS28QSW_75Hz;
-        break;
-      case 0x07:
-        val->odr = ILPS28QSW_100Hz;
-        break;
-      case 0x08:
-        val->odr = ILPS28QSW_200Hz;
-        break;
-      default:
-        val->odr = ILPS28QSW_ONE_SHOT;
-        break;
-    }
-
-    switch (ctrl_reg1.avg)
-    {
-      case 0x00:
-        val->avg = ILPS28QSW_4_AVG;
-        break;
-      case 0x01:
-        val->avg = ILPS28QSW_8_AVG;
-        break;
-      case 0x02:
-        val->avg = ILPS28QSW_16_AVG;
-        break;
-      case 0x03:
-        val->avg = ILPS28QSW_32_AVG;
-        break;
-      case 0x04:
-        val->avg = ILPS28QSW_64_AVG;
-        break;
-      case 0x05:
-        val->avg = ILPS28QSW_128_AVG;
-        break;
-      case 0x06:
-        val->avg = ILPS28QSW_256_AVG;
-        break;
-      case 0x07:
-        val->avg = ILPS28QSW_512_AVG;
-        break;
-      default:
-        val->avg = ILPS28QSW_4_AVG;
-        break;
-    }
-
-    switch ((ctrl_reg2.lfpf_cfg << 2) | ctrl_reg2.en_lpfp)
-    {
-      case 0x00:
-        val->lpf = ILPS28QSW_LPF_DISABLE;
-        break;
-      case 0x01:
-        val->lpf = ILPS28QSW_LPF_ODR_DIV_4;
-        break;
-      case 0x03:
-        val->lpf = ILPS28QSW_LPF_ODR_DIV_9;
-        break;
-      default:
-        val->lpf = ILPS28QSW_LPF_DISABLE;
-        break;
-    }
-
-    val->interleaved_mode = ctrl_reg3.ah_qvar_p_auto_en;
+    case 0x00:
+      val->fs = ILPS28QSW_1260hPa;
+      break;
+    case 0x01:
+      val->fs = ILPS28QSW_4060hPa;
+      break;
+    default:
+      val->fs = ILPS28QSW_1260hPa;
+      break;
   }
+
+  switch (ctrl_reg1.odr)
+  {
+    case 0x00:
+      val->odr = ILPS28QSW_ONE_SHOT;
+      break;
+    case 0x01:
+      val->odr = ILPS28QSW_1Hz;
+      break;
+    case 0x02:
+      val->odr = ILPS28QSW_4Hz;
+      break;
+    case 0x03:
+      val->odr = ILPS28QSW_10Hz;
+      break;
+    case 0x04:
+      val->odr = ILPS28QSW_25Hz;
+      break;
+    case 0x05:
+      val->odr = ILPS28QSW_50Hz;
+      break;
+    case 0x06:
+      val->odr = ILPS28QSW_75Hz;
+      break;
+    case 0x07:
+      val->odr = ILPS28QSW_100Hz;
+      break;
+    case 0x08:
+      val->odr = ILPS28QSW_200Hz;
+      break;
+    default:
+      val->odr = ILPS28QSW_ONE_SHOT;
+      break;
+  }
+
+  switch (ctrl_reg1.avg)
+  {
+    case 0x00:
+      val->avg = ILPS28QSW_4_AVG;
+      break;
+    case 0x01:
+      val->avg = ILPS28QSW_8_AVG;
+      break;
+    case 0x02:
+      val->avg = ILPS28QSW_16_AVG;
+      break;
+    case 0x03:
+      val->avg = ILPS28QSW_32_AVG;
+      break;
+    case 0x04:
+      val->avg = ILPS28QSW_64_AVG;
+      break;
+    case 0x05:
+      val->avg = ILPS28QSW_128_AVG;
+      break;
+    case 0x06:
+      val->avg = ILPS28QSW_256_AVG;
+      break;
+    case 0x07:
+      val->avg = ILPS28QSW_512_AVG;
+      break;
+    default:
+      val->avg = ILPS28QSW_4_AVG;
+      break;
+  }
+
+  switch ((ctrl_reg2.lfpf_cfg << 1) | ctrl_reg2.en_lpfp)
+  {
+    case 0x00:
+      val->lpf = ILPS28QSW_LPF_DISABLE;
+      break;
+    case 0x01:
+      val->lpf = ILPS28QSW_LPF_ODR_DIV_4;
+      break;
+    case 0x03:
+      val->lpf = ILPS28QSW_LPF_ODR_DIV_9;
+      break;
+    default:
+      val->lpf = ILPS28QSW_LPF_DISABLE;
+      break;
+  }
+
+  val->interleaved_mode = ctrl_reg3.ah_qvar_p_auto_en;
   return ret;
 }
 
@@ -679,7 +676,7 @@ int32_t ilps28qsw_mode_get(const stmdev_ctx_t *ctx, ilps28qsw_md_t *val)
   * @retval       interface status (MANDATORY: return 0 -> no Error)
   *
   */
-int32_t ilps28qsw_trigger_sw(const stmdev_ctx_t *ctx, ilps28qsw_md_t *md)
+int32_t ilps28qsw_trigger_sw(const stmdev_ctx_t *ctx, const ilps28qsw_md_t *md)
 {
   ilps28qsw_ctrl_reg2_t ctrl_reg2 = {0};
   int32_t ret = 0;
@@ -753,7 +750,7 @@ int32_t ilps28qsw_ah_qvar_en_get(const stmdev_ctx_t *ctx, uint8_t *val)
   * @retval       interface status (MANDATORY: return 0 -> no Error)
   *
   */
-int32_t ilps28qsw_data_get(const stmdev_ctx_t *ctx, ilps28qsw_md_t *md,
+int32_t ilps28qsw_data_get(const stmdev_ctx_t *ctx, const ilps28qsw_md_t *md,
                            ilps28qsw_data_t *data)
 {
   uint8_t buff[5] = {0};
@@ -1002,9 +999,9 @@ int32_t ilps28qsw_fifo_mode_get(const stmdev_ctx_t *ctx, ilps28qsw_operation_t *
 int32_t ilps28qsw_fifo_watermark_set(const stmdev_ctx_t *ctx, uint8_t val)
 {
   ilps28qsw_fifo_wtm_t fifo_wtm = {0};
-  int32_t ret = {0};
+  int32_t ret = 0;
 
-  if (val >= 128)
+  if (val >= 128u)
   {
     ret = -1;
     goto exit;
@@ -1013,7 +1010,7 @@ int32_t ilps28qsw_fifo_watermark_set(const stmdev_ctx_t *ctx, uint8_t val)
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_FIFO_WTM, (uint8_t *)&fifo_wtm, 1);
   if (ret == 0)
   {
-    fifo_wtm.wtm = val & 0x7F;
+    fifo_wtm.wtm = (uint8_t)(val & 0x7Fu);
 
     ret = ilps28qsw_write_reg(ctx, ILPS28QSW_FIFO_WTM, (uint8_t *)&fifo_wtm, 1);
   }
@@ -1059,7 +1056,7 @@ int32_t ilps28qsw_fifo_stop_on_wtm_set(const stmdev_ctx_t *ctx, ilps28qsw_fifo_e
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
   if (ret == 0)
   {
-    fifo_ctrl.stop_on_wtm = (val == ILPS28QSW_FIFO_EV_WTM) ? 1 : 0;
+    fifo_ctrl.stop_on_wtm = (val == ILPS28QSW_FIFO_EV_WTM) ? 1u : 0u;
 
     ret = ilps28qsw_write_reg(ctx, ILPS28QSW_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
   }
@@ -1082,7 +1079,7 @@ int32_t ilps28qsw_fifo_stop_on_wtm_get(const stmdev_ctx_t *ctx, ilps28qsw_fifo_e
   ret = ilps28qsw_read_reg(ctx, ILPS28QSW_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
   if (ret == 0)
   {
-    *val = (fifo_ctrl.stop_on_wtm == 1) ? ILPS28QSW_FIFO_EV_WTM : ILPS28QSW_FIFO_EV_FULL;
+    *val = (fifo_ctrl.stop_on_wtm == 1u) ? ILPS28QSW_FIFO_EV_WTM : ILPS28QSW_FIFO_EV_FULL;
   }
   return ret;
 }
@@ -1131,7 +1128,7 @@ int32_t ilps28qsw_fifo_status_get(const stmdev_ctx_t *ctx, ilps28qsw_fifo_status
   *
   */
 int32_t ilps28qsw_fifo_data_get(const stmdev_ctx_t *ctx, uint8_t samp,
-                                ilps28qsw_md_t *md, ilps28qsw_fifo_data_t *data)
+                                const ilps28qsw_md_t *md, ilps28qsw_fifo_data_t *data)
 {
   uint8_t fifo_data[3] = {0};
   uint8_t i = {0};
@@ -1219,7 +1216,7 @@ int32_t ilps28qsw_fifo_data_get(const stmdev_ctx_t *ctx, uint8_t samp,
   *
   */
 int32_t ilps28qsw_interrupt_mode_set(const stmdev_ctx_t *ctx,
-                                     ilps28qsw_int_mode_t *val)
+                                     const ilps28qsw_int_mode_t *val)
 {
   ilps28qsw_interrupt_cfg_t interrupt_cfg = {0};
   int32_t ret = {0};
@@ -1278,7 +1275,7 @@ int32_t ilps28qsw_interrupt_mode_get(const stmdev_ctx_t *ctx,
   *
   */
 int32_t ilps28qsw_int_on_threshold_mode_set(const stmdev_ctx_t *ctx,
-                                            ilps28qsw_int_th_md_t *val)
+                                            const ilps28qsw_int_th_md_t *val)
 {
   ilps28qsw_interrupt_cfg_t interrupt_cfg = {0};
   ilps28qsw_ths_p_l_t ths_p_l = {0};
@@ -1363,7 +1360,7 @@ int32_t ilps28qsw_int_on_threshold_mode_get(const stmdev_ctx_t *ctx,
   * @retval       interface status (MANDATORY: return 0 -> no Error)
   *
   */
-int32_t ilps28qsw_reference_mode_set(const stmdev_ctx_t *ctx, ilps28qsw_ref_md_t *val)
+int32_t ilps28qsw_reference_mode_set(const stmdev_ctx_t *ctx, const ilps28qsw_ref_md_t *val)
 {
   ilps28qsw_interrupt_cfg_t interrupt_cfg = {0};
   int32_t ret = {0};
